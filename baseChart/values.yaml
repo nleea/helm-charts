@@ -5,11 +5,16 @@
 releaseName: myrelease
 replicaCount: 3
 
+myapp:
+  env: prod
+  retail:
+    enabledfeatures: true
+
 image:
   repository: nginx
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "1.7.9"
 
 imagePullSecrets: []
 nameOverride: ""

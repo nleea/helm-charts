@@ -2,7 +2,7 @@
 Root object: {{.}}
 
 
-Is Insrtall: {{.Release.IsInstall }}
+Is Install: {{.Release.IsInstall }}
 IsUpgrade: {{.Release.IsUpgrade }}
 Name: {{.Release.Name }} 
 Namespace: {{.Release.Namespace }}
@@ -33,8 +33,6 @@ Helm Version Server: {{ .Capabilities.HelmVersion.Version }}
 Template Name: {{ .Template.Name }} 
 Template Base Path: {{ .Template.BasePath }}
 
-
-
 {{/* File Object */}}
 File Get: {{ .Files.Get "myconfig1.toml" }}
 File Glob as Config: {{ (.Files.Glob "config-files/*").AsConfig }}
@@ -42,3 +40,6 @@ File Glob as Secret: {{ (.Files.Glob "config-files/*").AsSecrets }}
 File Lines: {{ .Files.Lines "myconfig1.toml" }}
 File Lines: {{ .Files.Lines "config-files/myconfig2.toml" }}
 File Glob: {{ .Files.Glob "config-files/*" }}
+
+{{/* Logic and Flow Control Functions */}}
+URL: https://helm.sh/docs/chart_template_guide/function_list/#logic-and-flow-control-functions
