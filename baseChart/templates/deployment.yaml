@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{  .Chart.Name }}
+  labels:
+    app: nginx
+  annotations: 
+    # without quota function
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    # With quota function
+    app.kubernetes.io/managed-by: {{ quote .Release.Service }}
+    #With pipeline function
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    # with pipelines i can add more function example: upper, there're many search in the documentation
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote | upper }}
+    # with default function
+    app.kubernetes.io/managed-by: {{ default "myrelease" .Values.releaseName | upper }}
+    # Controlling Leading and Trailing White spaces 
+    leading-whitespace: "   {{- .Chart.Name }}    kalyan"
+    trailing-whitespace: "   {{ .Chart.Name -}}    kalyan"
+    leadtrail-whitespace: "   {{- .Chart.Name -}}    kalyan"   
+    # indent function
+    indenttest: "  {{- .Chart.Name | indent 4 -}}  "
+    # nindent function
+    nindenttest: "  {{- .Chart.Name | nindent 4 -}}  " 
+
+spec:
+  selector: #permite seleccionar un conjunto de objetos que cumplan las condicione
+    matchLabels:
+      app: nginx
+  replicas: {{ default 1 .Values.replicaCount }} # indica al controlador que ejecute N pods
+  template: # Plantilla que define los containers
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.7.9
+          ports:
+            - containerPort: 80
+          resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+# en esta caso en el selector se le esta diciendo que busque todas aquellos contenedores que tengan un label nginx, ya que estos se van a crear en la parte de container
