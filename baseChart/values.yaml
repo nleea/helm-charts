@@ -31,7 +31,11 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-podAnnotations: {}
+podAnnotations:
+  appName: myapp1
+  appType: webserver
+  appTech: HTML
+
 podLabels: {}
 
 podSecurityContext:
