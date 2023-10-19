@@ -1,0 +1,44 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}
+  namespace: {{ .Values.myapp.namespace }}
+data:
+{{- with .Values.myapp.data.config }}
+  application-name: {{ .appName }}
+  {{- if eq .appTech "HTML" }}
+  application-type: {{ .appType }}
+  {{- else if eq .appTech "PYTHON" }}
+  application-type: {{ .appType }}
+  {{- else if and $.Values.myapp.retail.enabledfeatures (eq .appTech "PHP") }}
+  application-type: {{ .appuknow | quote }}
+  {{- else }}
+  application-type: "server"
+  {{- end }}
+{{- end }}
+
+---
+
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-c1
+  namespace: default
+data:
+{{- range $key, $value := .Values.myapp.data.config  }}
+{{ $key | indent 2 }}: {{ $value }}
+{{- end }}
+
+---
+
+{{- $charname := .Chart.Name  }}
+
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-{{ .Chart.Name }}-c2
+  namespace: default
+data:
+{{- range $key, $value := .Values.myapp.data.config  }}
+{{ $key | indent 2 }}: {{ $value }}-{{ $charname }}
+{{- end }}

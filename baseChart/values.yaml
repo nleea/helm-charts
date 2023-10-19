@@ -9,6 +9,27 @@ myapp:
   env: prod
   retail:
     enabledfeatures: true
+  namespace: default
+  data:
+    config:
+      appName: myapp1
+      appType: backserver
+      appTech: PHP
+      appDb: mysql
+      appuknow: IMPROVENT
+    config1:
+      appName: myapp1
+      appType: webserver
+      appTech: HTML
+      appDb: mysql
+  namespaces1:
+    - name: myapp1
+    - name: myapp2
+    - name: myapp3
+  namespaces2:
+    - name: myapp12
+    - name: myapp22
+    - name: myapp32
 
 image:
   repository: nginx

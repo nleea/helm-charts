@@ -1,0 +1,19 @@
+{{- range .Values.myapp.namespaces1 }}
+apiVersion: v1
+kind: Namespace
+metadata:
+    name: {{ .name }}
+    labels:
+        tipo: desarrollo
+---
+{{- end }}
+
+{{- range $enviroment := .Values.myapp.namespaces2 }}
+apiVersion: v1
+kind: Namespace
+metadata:
+    name: {{ $enviroment.name }}
+    labels:
+        tipo: desarrollo
+---
+{{- end }}

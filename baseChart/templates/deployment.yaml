@@ -1,7 +1,10 @@
+{{- $chartname := .Chart.Name -}}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-{{  .Chart.Name }}
+  name: {{ .Release.Name }}-{{ $chartname }}
+  namespace: myapp1
   labels:
     app: nginx
   annotations: 
@@ -27,7 +30,7 @@ metadata:
 spec:
   selector: #permite seleccionar un conjunto de objetos que cumplan las condicione
     matchLabels:
-      app: nginx
+      app: {{ $chartname }}
   
 {{- /* 
   # replicas: {{ default 1 .Values.replicaCount }} # indica al controlador que ejecute N pods
@@ -38,7 +41,7 @@ spec:
   # replicas: 6
 */}}
 
-  {{- if and .Values.myapp.retail.enabledfeatures (not (eq .Values.myapp.env "uta"))}}
+  {{- if and .Values.myapp.retail.enabledfeatures (not (eq .Values.myapp.env "uta")) }}
   replicas: 6
   {{- else if eq .Values.myapp.env "prod" }}
   replicas: 4
@@ -53,14 +56,21 @@ spec:
   template: # Plantilla que define los containers
     metadata:
       labels:
-        app: nginx
+        app: {{ $chartname }}
+    {{/*El with tiene su propio contexto es por lo que el '.' que esta dentro del with no corresponde al global, si no al del with
+      que es lo que se encuentra dentro de podAnnotations
+
+      Para acceder el contexto global dentro de un with se tiene que colocar '$.'
+    */}}
     {{- with .Values.podAnnotations }}
       annotations:
       {{- toYaml . | nindent 8 }}
+        appManageBy: {{ $.Release.Service }}
+        appHelmChart: {{ $chartname }}
     {{- end }}  
     spec:
       containers:
-        - name: nginx
+        - name: {{ $chartname }}-container
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
             - containerPort: 80
